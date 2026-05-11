@@ -8,10 +8,12 @@ data_dir = Path(__file__).parent / "data" / "lab2"
 
 
 def num_key(p: Path):
+    """Возвращает номер из имени файла, чтобы A10 не попал между A1 и A2."""
     m = re.search(r"\d+", p.stem)
     return int(m.group()) if m else 10**9
 
 
+# Данные разложены по частям: A1..A10 и b1..b10.
 A_files = sorted(data_dir.glob("A*.txt"), key=num_key)
 b_files = sorted(data_dir.glob("b*.txt"), key=num_key)
 
@@ -24,13 +26,15 @@ if len(A_files) != len(b_files):
 A_parts = [np.loadtxt(f, delimiter=",") for f in A_files]
 b_parts = [np.loadtxt(f, delimiter=",").reshape(-1) for f in b_files]
 
+# Склеиваем части в одну большую переопределенную систему A x ~= b.
 A = np.vstack(A_parts)
 b = np.concatenate(b_parts)
 
+# Метод наименьших квадратов ищет x с минимальной нормой невязки ||b - A x||.
 x, residuals, rank, s = np.linalg.lstsq(A, b, rcond=None)
-
 norm_res = np.linalg.norm(b - A @ x)
 
 print("x =")
 print(x)
 print("\n||b - A x|| =", norm_res)
+print("Относительная невязка =", norm_res / np.linalg.norm(b))

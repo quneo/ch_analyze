@@ -1,7 +1,8 @@
 import sympy as sp
 
-n = sp.symbols("n", integer=True, nonnegative=True)
 
+# Решаем линейную неоднородную рекурсию второго порядка.
+n = sp.symbols("n", integer=True, nonnegative=True)
 y = sp.Function("y")
 
 recurrence = sp.Eq(
@@ -9,6 +10,7 @@ recurrence = sp.Eq(
     2**n
 )
 
+# Начальные условия позволяют выбрать единственное решение рекурсии.
 solution = sp.rsolve(
     recurrence,
     y(n),
@@ -21,7 +23,6 @@ solution = sp.rsolve(
 print("Явная формула:")
 print(sp.simplify(solution))
 
-print()
-
+print("\nПервые значения последовательности:")
 for k in range(10):
     print(f"y_{k} =", solution.subs(n, k))
